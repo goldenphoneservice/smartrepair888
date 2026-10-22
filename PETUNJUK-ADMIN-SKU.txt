@@ -1,0 +1,15 @@
+GPS-SMART MANAGEMENT — SKU & Admin Foundation
+
+SKU Inventori
+- Saat menambah barang, kosongkan kolom SKU untuk membuat SKU-000001, SKU-000002, dan seterusnya berdasarkan SKU yang sudah terlihat pada workspace.
+- Kamu juga bisa mengetik SKU manual; aplikasi memeriksa duplikat di daftar yang dimuat.
+- Migrasi SQL menambahkan unique index per tenant sebagai perlindungan database. Jika ada SKU duplikat lama, migrasi akan gagal sampai duplikat dibereskan.
+
+Admin platform
+- Tabel platform_owners dan platform_activation_codes sudah disiapkan pada proyek Supabase oleh pemilik.
+- Jangan memberi akses tabel tersebut langsung ke browser. Aktivasi langsung dan penukaran kode belum aktif sampai server-side Edge Functions dibuat dan diterapkan.
+- Jangan menyimpan service_role key di file .env frontend atau membagikannya.
+- Jangan menganggap menu admin sudah aktif hanya karena tabel ada.
+
+Migrasi tambahan
+Jalankan file supabase/migrations/202610190002_sku_and_platform_admin_foundation.sql pada proyek GPS-SMART-MANAGEMENT (project ref ljngcaylpmdcjhombntl), bukan proyek lama WAVEID-GSM.

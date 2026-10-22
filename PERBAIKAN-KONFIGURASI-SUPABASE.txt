@@ -1,0 +1,12 @@
+PERBAIKAN KONFIGURASI SUPABASE
+
+File .env sudah disertakan di folder utama project.
+
+Jika pesan “Konfigurasi Supabase belum lengkap” masih muncul:
+1. Pastikan file bernama tepat .env (bukan .env.txt) ada sejajar dengan package.json.
+2. Tutup aplikasi/dev server lalu jalankan ulang: npm run dev. Vite hanya membaca perubahan .env saat server dimulai ulang.
+3. Jika key publik tidak diterima, buka Supabase Dashboard project GPS-SMART-MANAGEMENT → Project Settings → API Keys, salin publishable key (atau anon public key lama) ke VITE_SUPABASE_PUBLISHABLE_KEY di .env.
+4. Jangan pernah menggunakan service_role/secret key pada aplikasi frontend.
+
+URL project sudah diisi: https://ljngcaylpmdcjhombntl.supabase.co
+Publishable key adalah key publik; tetap pastikan RLS dan kebijakan database benar.

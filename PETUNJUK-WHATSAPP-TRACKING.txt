@@ -1,0 +1,14 @@
+GPS-SMART-MANAGEMENT — WhatsApp Tracking Action
+
+Perubahan:
+- Daftar Servis HP memiliki ikon WhatsApp di kolom Aksi.
+- Klik ikon akan membuka WhatsApp dengan nomor pelanggan dan pesan berisi link tracking.
+- Asisten suara/teks menerima perintah seperti: "kirim link tracking WhatsApp ke Budi" atau "kirim link tracking untuk tiket SRV-...".
+- Asisten mencari tiket, menampilkan penerima, lalu menunggu klik "Buka WhatsApp untuk konfirmasi". Pesan tidak dikirim otomatis.
+- Pesan publik hanya menyertakan nama pelanggan, nomor tiket dan link tracking; tidak menyertakan IMEI, PIN/pola, harga modal atau catatan internal.
+
+Penting:
+- Link tracking menggunakan VITE_PUBLIC_APP_URL jika diisi, jika tidak menggunakan alamat situs yang sedang dibuka.
+- Untuk penggunaan pelanggan, pastikan aplikasi sudah dipublikasikan pada URL yang dapat diakses publik dan migration Supabase public service tracking telah diterapkan.
+- Tombol hanya aktif jika nomor WhatsApp dan kode tracking tersedia.
+- Build penuh belum berhasil diverifikasi karena instalasi dependensi timeout di lingkungan pemeriksaan.

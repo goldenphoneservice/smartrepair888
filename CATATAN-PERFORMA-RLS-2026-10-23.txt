@@ -1,0 +1,13 @@
+GPS-SMART-MANAGEMENT — STABILISASI PERFORMA & RLS
+Tanggal: 23 Oktober 2026
+
+Perubahan database yang sudah diterapkan ke proyek Supabase GPS-SMART-MANAGEMENT (ljngcaylpmdcjhombntl):
+1. Kebijakan RLS app_records kini menggunakan (select auth.uid()) agar nilai identitas dievaluasi sekali per statement, bukan berulang per baris. Cakupan akses tenant dan pemeriksaan membership aktif tetap sama.
+2. Menambahkan indeks untuk foreign key created_by, redeemed_by_tenant, activated_by, purchases(tenant_id,supplier_id), dan service_parts(tenant_id,product_id/service_order_id).
+3. Migrasi terlampir agar perubahan dapat ditinjau dan disimpan bersama source. Migrasi ini sudah diterapkan live; jangan jalankan manual jika migrasi sudah tercatat.
+
+Verifikasi: Supabase mengembalikan success untuk migrasi. Query katalog mengonfirmasi indeks utama app_records_created_by_idx, purchases_tenant_supplier_idx, service_parts_tenant_product_idx, dan service_parts_tenant_service_order_idx tersedia.
+
+Belum diverifikasi: build produksi frontend, login browser, transaksi end-to-end, dan benchmark performa. Perubahan ini tidak membuktikan seluruh aplikasi sudah bebas bug.
+
+Catatan keamanan dari advisor: ada SECURITY DEFINER RPC untuk public tracking yang memang dapat dipanggil anon; fungsinya harus tetap hanya mengembalikan kolom tracking publik. Password leaked-protection masih perlu diaktifkan melalui pengaturan Auth dashboard. Tabel platform_* tanpa policy RLS perlu dipastikan memang hanya diakses melalui service role/Edge Function, bukan klien. Tidak ada service_role key atau secret AI yang ditambahkan ke paket.

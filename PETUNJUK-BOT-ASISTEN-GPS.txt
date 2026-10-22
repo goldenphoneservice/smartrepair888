@@ -1,0 +1,22 @@
+GPS-SMART-MANAGEMENT — BOT ASISTEN GPS (PAKET UJI)
+
+Perubahan pada paket:
+- Asisten operasional dengan input teks dan tombol pengenalan suara id-ID.
+- Hasil suara masuk ke kolom teks agar dapat diperiksa/diedit sebelum dijalankan.
+- Pencarian data workspace untuk tiket servis, pelanggan, dan produk.
+- Perintah navigasi menu, ringkasan transaksi hari ini, stok minimum, restock, dan servis aktif.
+- Penyaringan field sensitif (PIN/pola, IMEI, password, secret, catatan internal) sebelum data dipakai oleh logika asisten.
+- Alur WhatsApp tetap menyiapkan pesan dan memerlukan klik pengguna untuk membuka WhatsApp; pesan tidak dikirim diam-diam.
+
+PENTING:
+- Ini adalah asisten operasional berbasis aturan dan data aplikasi, bukan model AI generatif penuh. Tidak ada API key AI yang ditanam di frontend.
+- Pengenalan suara bergantung pada dukungan browser/izin mikrofon; jika tidak didukung, ketik perintah.
+- Build penuh belum terverifikasi di lingkungan pembuatan paket. Tes dengan data contoh terlebih dahulu.
+
+Cara tes:
+1. Ekstrak ZIP ke folder baru.
+2. Pastikan file .env berada sejajar dengan package.json.
+3. Jalankan MULAI-APLIKASI.bat.
+4. Login ke workspace, buka menu Asisten AI.
+5. Coba: "laporan hari ini", "stok menipis", "servis belum selesai", "cari produk LCD", "cari tiket SRV-...".
+6. Tekan tombol Perintah suara, ucapkan perintah, periksa/edit hasil transkripsi, lalu tekan Jalankan perintah.

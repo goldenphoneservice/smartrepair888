@@ -1,0 +1,40 @@
+GPS-SMART-MANAGEMENT — Paket uji modul tambahan
+
+PERUBAHAN PADA PAKET INI
+- Menu Supplier
+- Menu Retur Produk
+- Menu Perangkat HP (IMEI/nomor seri, kondisi, harga, status)
+- Menu Aset & Inventaris
+- Menu Promosi & Voucher
+- Menu Website Toko
+- Menu tambahan menggunakan penyimpanan tenant-scoped app_records yang sudah ada.
+
+PENTING
+Paket ini memperluas menu dan formulir pencatatan sebagai tahap awal menuju cakupan fitur RBM Borneo. Ini BUKAN klaim kesetaraan fitur penuh. Alur stok otomatis untuk penjualan/pembelian/retur, pembukuan jurnal otomatis, website toko publik, voucher yang divalidasi di kasir, dan komisi/gaji yang terhubung ke transaksi masih memerlukan implementasi dan pengujian integrasi lanjutan.
+
+CARA TES
+1. Ekstrak ZIP ke folder baru.
+2. Buka folder aplikasi.
+3. Jalankan MULAI-APLIKASI.bat (memerlukan Node.js; jika pertama kali, dependensi perlu dipasang).
+4. Login dengan akun Supabase.
+5. Coba buka menu Supplier, Retur Produk, Perangkat HP, Aset & Inventaris, Promosi & Voucher, dan Website Toko.
+6. Simpan data contoh dan muat ulang halaman untuk memeriksa apakah data tetap tersimpan.
+
+KONFIGURASI
+File .env memakai URL dan publishable key Supabase. Jangan mengganti key dengan service_role key. Jangan mengunggah file .env ke repositori publik.
+
+PENGUJIAN
+Build belum bisa diverifikasi di lingkungan pembuatan ini karena dependensi node_modules tidak tersedia. Uji paket sebelum dipakai untuk transaksi produksi.
+
+
+PERUBAHAN TAMBAHAN:
+- Status servis "Dalam Antrean" kini tersedia dan menjadi status awal tiket baru.
+- Angka 1–9 selalu terlihat pada gambar pola.
+- Menu baru "PIN & Pola" tersedia untuk mencatat jenis kunci, PIN/pola, tiket servis, dan perangkat.
+- Input/tambah produk serta stok awal ada di menu Inventori.
+- Untuk menambah stok barang yang datang dari pemasok, gunakan menu Pembelian; menu ini mencatat pembelian, tetapi cek stok akhir tetap perlu diuji pada alur aplikasi.
+
+Keamanan:
+PIN/pola perangkat sangat sensitif. Catat hanya dengan persetujuan pelanggan, batasi akses petugas, jangan kirim ke tracking publik/WhatsApp, dan hapus setelah servis tidak lagi memerlukannya. Pada paket ini, data modul masih disimpan dalam app_records; jangan gunakan penyimpanan PIN untuk produksi sebelum kontrol akses/enkripsi khusus selesai ditambahkan.
+
+Migration baru: supabase/migrations/202610220003_expand_app_record_modules_pin_queue.sql

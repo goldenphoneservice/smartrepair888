@@ -1,0 +1,17 @@
+GPS-SMART-MANAGEMENT — PENJUALAN ATOMIK (UJI)
+Tanggal: 23 Oktober 2026
+
+Perubahan database yang diterapkan pada project Supabase ljngcaylpmdcjhombntl:
+- Fungsi public.post_sale_atomic(...) membuat penjualan, item penjualan, pengurangan stok, riwayat stock_movements, dan catatan pembayaran dalam satu transaksi database.
+- Memeriksa login dan keanggotaan workspace aktif dengan role owner/manager (kasir belum dapat memakai RPC ini karena policy UPDATE produk yang ada masih membatasi owner/manager).
+- Mengunci baris produk untuk membantu mencegah stok terjual bersamaan melebihi stok tersedia.
+- Menolak jumlah/harga tidak valid, diskon di atas subtotal, produk dari workspace lain, produk duplikat dalam payload, dan stok yang tidak cukup.
+- Hak EXECUTE diberikan ke authenticated; anon tidak diberi akses. Fungsi berjalan sebagai security invoker.
+
+PENTING:
+- Fungsi database telah dibuat dan hak aksesnya diverifikasi.
+- UI kasir frontend BELUM dipastikan memanggil fungsi ini. Jangan menganggap seluruh transaksi kasir sudah menggunakan jalur atomik sampai integrasi frontend diuji. Fungsi saat ini hanya untuk owner/manager; integrasi akses kasir perlu desain RLS khusus yang aman.
+- Belum ada transaksi penjualan uji yang dibuat pada data toko nyata.
+- Fungsi mencatat satu pembayaran penuh untuk total penjualan; pembayaran parsial/angsuran dan jurnal akuntansi otomatis belum ditangani oleh fungsi ini.
+- Migrasi ini untuk dokumentasi dan audit. Tidak perlu dijalankan manual pada project yang sudah menerimanya.
+- File .env hanya berisi URL dan publishable key publik; jangan pernah menambahkan service_role key ke frontend.

@@ -1,0 +1,38 @@
+# GPS-SMART MANAGEMENT — Paket perbaikan
+
+## Cara menjalankan (Windows)
+1. Ekstrak ZIP ini ke folder baru.
+2. Pastikan Node.js sudah terpasang.
+3. Klik dua kali `MULAI-APLIKASI.bat`.
+4. Buka alamat Local yang muncul di jendela hitam terminal.
+
+## Yang diperbaiki
+- Menu operasional sekarang memiliki formulir tambah, edit, hapus, pencarian, dan ekspor CSV.
+- Menu Servis HP memiliki formulir tiket servis.
+- Tombol tambah di bagian atas membuka formulir modul aktif.
+- Tombol bulan/matahari di bar atas untuk mode gelap/terang; pilihan disimpan di browser.
+- Konfigurasi `.env` ditambahkan untuk koneksi autentikasi Supabase.
+
+## Catatan penting
+Untuk saat ini, catatan CRUD pada modul operasional disimpan lokal di browser/perangkat ini (`localStorage`), bukan ke tabel Supabase. Login, pendaftaran, dan pembuatan workspace tetap memakai Supabase. Jadi jangan gunakan paket ini untuk transaksi nyata atau data pelanggan penting sebelum sinkronisasi database dan kebijakan keamanan per modul diselesaikan. Data lokal tidak otomatis pindah ke komputer lain dan dapat hilang jika data browser dibersihkan. Gunakan Ekspor CSV sebagai cadangan.
+
+## Factory reset
+Buka menu Pengaturan > Reset data lokal. Ketik RESET untuk konfirmasi.
+Fitur ini hanya menghapus key localStorage berawalan gps-smart: pada browser/perangkat saat ini. Fitur ini TIDAK menghapus data Supabase Cloud.
+
+## Sinkronisasi data modul ke Supabase Cloud
+Paket ini menggunakan tabel fleksibel `public.app_records` agar modul operasional dapat menyimpan data di cloud dengan tenant_id dan RLS.
+Sebelum menggunakan CRUD cloud:
+1. Buka Supabase Dashboard untuk proyek GPS-SMART-MANAGEMENT.
+2. Buka SQL Editor > New query.
+3. Buka file `supabase/migrations/202610190001_app_records_tenant_scoped.sql` di folder proyek, salin seluruh isi file, tempel ke SQL Editor, lalu tekan Run.
+4. Muat ulang aplikasi dan masuk ke workspace.
+
+PENTING: migrasi ini menambahkan penyimpanan cloud fleksibel dan kebijakan tenant membership. Ini belum menggantikan tabel domain khusus (service_orders, products, sales, journal_entries, dll.), belum mengotomatiskan perubahan stok saat transaksi, dan belum membuat jurnal akuntansi otomatis. Jangan gunakan untuk transaksi nyata sebelum alur tersebut diuji dan diimplementasikan. Factory reset hanya menghapus data lokal, bukan data cloud.
+
+## Stok barang dan tracking servis
+- Inventori menyimpan katalog barang/spare part, stok, harga modal dan harga jual.
+- Modul Servis HP kini memiliki kode tracking pelanggan dan pencarian status dengan verifikasi nomor telepon, serta riwayat perubahan status pada setiap tiket.
+- Status yang tersedia: Diterima, Diagnosa, Menunggu persetujuan pelanggan, Menunggu spare part, Dikerjakan, Quality control, Siap diambil, Selesai, dan Dibatalkan.
+- Tracking pada versi ini ada di halaman Servis HP dalam aplikasi bengkel yang memerlukan login. Halaman publik terpisah untuk pelanggan belum dibuat.
+- Perubahan stok otomatis dari penjualan/pembelian dan penggunaan spare part di tiket servis belum diterapkan; stok masih perlu diperbarui melalui modul inventori sampai alur transaksi stok selesai.

@@ -1,0 +1,28 @@
+GPS-SMART-MANAGEMENT — STABILISASI LANJUTAN
+Tanggal: 23 Oktober 2026
+
+PERUBAHAN UTAMA
+1. Perubahan stok dari transaksi sekarang memakai RPC database apply_inventory_stock_movement.
+2. RPC mengunci baris produk (SELECT ... FOR UPDATE), memeriksa keanggotaan workspace aktif, menolak stok negatif, memperbarui jumlah stok, dan membuat catatan Riwayat Stok dalam satu transaksi PostgreSQL.
+3. Fungsi memakai SECURITY INVOKER (bukan SECURITY DEFINER), dan hanya role authenticated yang diberi izin menjalankannya.
+4. Migrasi database telah diterapkan ke proyek Supabase GPS-SMART-MANAGEMENT yang terkonfigurasi pada source ini. Tidak perlu menjalankan SQL manual untuk proyek tersebut.
+5. Jika RPC gagal, UI akan menampilkan error agar pengguna tahu perubahan stok belum berhasil. Catatan transaksi yang lebih dulu tersimpan mungkin masih memerlukan pemeriksaan; lakukan pengujian sebelum penggunaan produksi.
+
+PENGUJIAN YANG DILAKUKAN
+- Konfirmasi melalui metadata PostgreSQL: fungsi ada, SECURITY DEFINER = false, authenticated dapat execute, anon tidak dapat execute.
+- Migrasi Supabase berhasil diterapkan.
+- Build frontend penuh belum diverifikasi karena pemasangan dependency npm tidak selesai dalam lingkungan pemeriksaan ini.
+- Belum dilakukan transaksi stok langsung pada data pelanggan/produk nyata.
+
+CHECKLIST UJI MANUAL
+1. Login ke workspace.
+2. Catat jumlah stok satu produk uji.
+3. Buat transaksi penjualan 1 unit produk itu; pastikan stok berkurang 1 dan Riwayat Stok mencatat -1.
+4. Coba penjualan dengan jumlah lebih besar daripada stok; operasi stok harus ditolak dan pesan error ditampilkan.
+5. Cek Riwayat Stok dan pastikan tidak ada catatan pergerakan yang tercipta ketika perubahan stok ditolak.
+6. Uji pembelian dan pemakaian sparepart servis pada produk uji.
+7. Jangan menguji dengan transaksi pelanggan nyata sebelum hasilnya cocok.
+
+CATATAN KEAMANAN
+- Jangan memasukkan service_role key ke file frontend.
+- Nilai VITE_SUPABASE_PUBLISHABLE_KEY/anon key adalah key publik; proteksi data tetap bergantung pada RLS dan validasi backend.

@@ -1,0 +1,24 @@
+GPS-SMART MANAGEMENT — PEMBARUAN INVENTORI
+
+Fitur formulir inventori:
+- Tanggal input produk berada di bagian paling atas dan menggunakan kalender.
+- SKU dapat diketik manual atau dibuat melalui tombol “Buat SKU” di ujung kolom.
+- SKU yang sama akan ditolak dalam daftar inventori workspace yang sedang aktif.
+- Kategori dan subkategori tersedia untuk mengelompokkan produk; subkategori menyediakan saran sesuai kategori tetapi tetap bisa diketik manual.
+- Harga modal, harga jual eceran, dan harga grosir.
+- Supplier dapat dipilih dari menu Supplier yang sudah tersimpan. Jika supplier belum ada, kolom supplier manual tetap tersedia.
+- Produk inventori yang tersimpan akan muncul pada pilihan sparepart di formulir servis.
+
+Cara tes:
+1. Masuk ke aplikasi dan buka menu Supplier. Tambahkan satu supplier contoh.
+2. Buka Inventori lalu tekan Input produk / spare part.
+3. Pilih tanggal, klik Buat SKU atau isi SKU sendiri, lalu lengkapi nama, kategori, subkategori, stok dan harga.
+4. Pilih supplier yang tadi dibuat, lalu simpan produk.
+5. Buka kembali Inventori dan pastikan produk tampil dengan tanggal, SKU, subkategori, harga grosir dan supplier.
+6. Buka Servis HP dan periksa apakah produk muncul pada pilihan sparepart.
+
+Migration tambahan:
+File supabase/migrations/202610220004_inventory_search_indexes.sql menambahkan indeks pencarian non-destruktif. Indeks ini bukan syarat untuk menampilkan formulir, tetapi bisa membantu pencarian setelah dijalankan di database.
+
+Catatan verifikasi:
+Build penuh belum dapat dijalankan karena instalasi dependensi npm tidak selesai pada lingkungan pembuatan paket. Sintaks JSX/TSX diperiksa menggunakan TypeScript transpile tanpa diagnostics, tetapi ini bukan pengganti build dan pengujian end-to-end.

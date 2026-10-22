@@ -1,0 +1,22 @@
+PERBAIKAN TRACKING SERVICE — GPS-SMART MANAGEMENT
+
+Perbaikan dalam paket:
+- RPC get_public_service_tracking diperkuat dan mengembalikan status publik saja.
+- Error pada halaman tracking kini lebih jelas jika RPC belum tersedia di database.
+- URL tracking memakai VITE_PUBLIC_APP_URL bila disediakan.
+- Data sensitif (nomor telepon, IMEI, harga, pola PIN, catatan internal) tidak dikirim oleh RPC publik.
+
+PENTING: file migration di ZIP tidak otomatis mengubah database Supabase online.
+Jika pelanggan melihat pesan bahwa tracking belum diaktifkan, migration ini harus diterapkan sekali pada project Supabase:
+  supabase/migrations/202610220002_public_service_tracking.sql
+
+Untuk link WhatsApp yang bisa dibuka pelanggan, aplikasi harus dihosting di alamat web publik. Jangan gunakan localhost, 127.0.0.1, atau alamat internal desktop sebagai URL pelanggan. Jika aplikasi sudah dihosting, isi VITE_PUBLIC_APP_URL dengan alamat website tersebut lalu jalankan/build ulang.
+
+CARA MENCOBA:
+1. Ekstrak ZIP revisi ini ke folder baru.
+2. Jalankan MULAI-APLIKASI.bat.
+3. Buat tiket servis contoh dan simpan.
+4. Buka link tracking dari WhatsApp di browser.
+5. Jika pesan menyebut tracking belum diaktifkan, database Supabase belum memiliki migration RPC tersebut.
+
+Tidak ada service_role key yang digunakan di frontend. Build tetap perlu diverifikasi pada komputer pengujian.

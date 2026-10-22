@@ -1,0 +1,24 @@
+GPS-SMART-MANAGEMENT — ANALISIS PINTAR & ARAH PENGEMBANGAN AI
+
+Perubahan pada paket ini:
+- Tombol Auto SKU berada di dalam sisi kanan kolom SKU; kolom tetap bisa diisi manual.
+- Menu Inventori menampilkan ringkasan otomatis: stok mencapai minimum, stok kosong, dan harga jual di bawah harga modal.
+- Panel ini adalah analisis berbasis aturan dan data inventori yang tersimpan. Ini belum memakai model AI generatif atau layanan AI eksternal.
+
+Rencana AI yang disarankan:
+1. Asisten operasional: tanya dalam bahasa Indonesia tentang stok, servis, penjualan, dan laporan; jawaban harus berasal dari data workspace yang sedang login.
+2. Prediksi restock: gunakan riwayat penjualan dan pemakaian sparepart servis, lead time supplier, dan stok minimum.
+3. Deteksi anomali: tandai stok tidak wajar, margin negatif, SKU duplikat, transaksi yang belum lengkap, dan servis lama belum selesai.
+4. Ringkasan harian otomatis: omzet, laba kotor (hanya bila data modal lengkap), servis masuk/selesai, dan produk yang perlu dibeli.
+5. Bantu input: sarankan kategori/subkategori dari nama produk, tetapi pengguna tetap mengonfirmasi sebelum menyimpan.
+
+Keamanan:
+- AI generatif memerlukan penyedia/model dan API key yang disimpan hanya sebagai secret di server-side Supabase Edge Function atau server backend. Jangan letakkan API key AI rahasia dalam file .env frontend atau bundle aplikasi.
+- Data pelanggan, IMEI, PIN/pola perangkat, dan catatan servis sensitif tidak boleh dikirim ke penyedia AI secara default. Gunakan minimisasi data dan izin yang jelas.
+- Sebelum mengaktifkan AI generatif, tentukan provider/model, batas biaya, batas permintaan, dan aturan privasi. Jangan klaim AI generatif aktif hanya karena panel analisis otomatis tersedia.
+
+Tes:
+1. Buka Inventori.
+2. Buka formulir produk. Di kolom SKU, ketik manual atau tekan tombol Auto di dalam ujung kanan kolom.
+3. Tambah beberapa produk contoh dengan stok dan stok minimum.
+4. Pastikan panel Analisis Pintar menghitung produk yang stoknya mencapai minimum/kosong dan produk yang harga jualnya di bawah modal.

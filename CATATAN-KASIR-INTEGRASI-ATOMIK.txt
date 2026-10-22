@@ -1,0 +1,17 @@
+GPS-SMART-MANAGEMENT — INTEGRASI KASIR ATOMIK
+Tanggal: 23 Oktober 2026
+
+Perubahan:
+- Modul Penjualan baru (create) sekarang memanggil RPC post_app_record_sale_atomic.
+- Penjualan, jika item cocok dengan SKU/nama produk pada modul Inventori, pengurangan stok dan catatan Riwayat Stok dilakukan di transaksi database yang sama.
+- Jika stok kurang, fungsi menolak seluruh transaksi dan tidak menyimpan nota.
+- Item jasa/barang luar yang tidak cocok dengan inventori tetap dapat dicatat tanpa pengurangan stok.
+- Edit transaksi penjualan lama masih memakai jalur edit generik; jangan edit transaksi posted untuk koreksi stok. Fitur void/retur atomik perlu tahap terpisah.
+- Pembayaran disimpan sebagai field pada record Penjualan, bukan sebagai ledger pembayaran normalized.
+- Fungsi database sudah diterapkan ke project Supabase ljngcaylpmdcjhombntl; UI terintegrasi pada source ZIP.
+- Build frontend dan transaksi end-to-end belum dapat diverifikasi di lingkungan ini. Jangan menganggap produksi sudah lulus sampai diuji.
+
+Akses online:
+- ZIP ini belum otomatis menjadi website publik. Aplikasi membutuhkan hosting frontend (misalnya Vercel/Netlify) dan konfigurasi URL publik VITE_PUBLIC_APP_URL untuk link tracking WhatsApp.
+- Supabase adalah backend/database, bukan otomatis URL website untuk frontend Vite.
+- Tidak ada service-role key yang boleh dimasukkan ke frontend.

@@ -1,0 +1,16 @@
+GPS-SMART MANAGEMENT — PETUNJUK MUDAH
+
+1. Ekstrak ZIP ini ke folder yang mudah ditemukan, misalnya Desktop.
+2. Buka folder GPS-SMART-MANAGEMENT.
+3. Klik dua kali MULAI-APLIKASI.bat.
+4. Saat pertama kali, tunggu proses pemasangan komponen selesai.
+5. Buka alamat Local yang muncul pada jendela hitam (terminal), misalnya http://localhost:5173/.
+6. Biarkan jendela hitam tetap terbuka saat aplikasi digunakan.
+7. Untuk menghentikan aplikasi, klik jendela hitam lalu tekan Ctrl+C.
+
+PENTING:
+- Ini starter aplikasi, bukan installer EXE yang sudah jadi.
+- Agar login bekerja, file .env perlu diatur dengan URL dan publishable key dari project GPS-SMART-MANAGEMENT.
+- Jangan gunakan service_role key di aplikasi.
+- Project Supabase lama WAVEID-GSM tidak boleh diubah.
+- Sebagian modul operasional masih berupa kerangka dan belum siap untuk transaksi nyata.

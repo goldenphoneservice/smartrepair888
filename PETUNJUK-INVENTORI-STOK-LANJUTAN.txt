@@ -1,0 +1,17 @@
+GPS-SMART-MANAGEMENT — INVENTORI & RIWAYAT STOK
+
+Perubahan paket:
+- Kolom barcode di inventori dan pencarian tabel memakai semua field, termasuk SKU/barcode/kategori/subkategori.
+- Panel stok minimum, stok kosong/negatif, harga jual di bawah modal, dan SKU ganda.
+- Modul Riwayat Stok untuk melihat/mencatat perubahan stok.
+- Stok awal dan penyesuaian jumlah dari formulir Inventori dicatat otomatis ke Riwayat Stok.
+- Pembelian, penjualan, retur, dan pemakaian sparepart servis dapat mencatat perubahan stok otomatis bila nama produk atau SKU sama persis dengan data inventori (servis memakai pilihan produk inventori).
+- Harga modal, eceran, grosir, supplier, dan pilihan supplier untuk pembelian dipertahankan.
+- Rekomendasi restock 14 hari memakai pergerakan keluar yang tercatat pada 30 hari terakhir. Akurasinya bergantung pada konsistensi pencatatan transaksi.
+
+PENTING:
+1. Migration 202610220005_inventory_stock_ledger.sql menambahkan modul Riwayat Stok ke daftar module_key. Migration ini sudah diterapkan langsung ke proyek Supabase GPS-SMART-MANAGEMENT yang terhubung saat paket disiapkan; jika memakai proyek Supabase lain, migration harus diterapkan di proyek tersebut.
+2. Stok otomatis dari penjualan/pembelian/retur mencocokkan SKU atau nama produk secara tepat. Pastikan SKU/nama di transaksi sama dengan yang ada di Inventori.
+3. Sistem saat ini memakai app_records generik; beberapa perubahan stok dan catatan transaksi bukan satu transaksi database atomik. Periksa Riwayat Stok untuk memastikan hasil transaksi.
+4. Build belum dinyatakan lolos sampai perintah npm run build berhasil pada komputer pengujian.
+5. Jangan memasukkan service-role key ke file .env frontend.

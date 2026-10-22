@@ -1,0 +1,8 @@
+GPS-SMART MANAGEMENT - CATATAN REVISI
+
+1. Menu PIN & Pola terpisah dihapus. Jenis kunci, PIN angka opsional, dan gambar pola bernomor 1-9 ada di formulir Servis HP.
+2. Menu Asisten AI ditambahkan. Bisa menerima perintah suara Bahasa Indonesia (bergantung dukungan browser/mikrofon) atau teks.
+3. Contoh: "laporan hari ini", "laporan transaksi hari ini", "stok menipis", "servis belum selesai", "buka inventori".
+4. Versi ini menganalisis data Supabase dengan aturan sederhana, bukan model AI generatif. Perintah untuk membuat/menghapus/mengubah transaksi belum otomatis dijalankan. Itu memerlukan integrasi model AI server-side dan langkah konfirmasi sebelum perubahan.
+5. Data PIN/pola perangkat sangat sensitif. Catat hanya dengan persetujuan pelanggan dan hapus segera setelah tidak diperlukan. Pada struktur app_records saat ini, data servis disimpan di database workspace; jangan simpan PIN/kata sandi jika akses petugas pada workspace belum dibatasi sesuai kebutuhan.
+6. Build belum dapat diverifikasi di lingkungan pembuatan karena paket dependensi TypeScript/Vite yang tersedia tidak lengkap. ZIP ini untuk pengujian, bukan klaim build production.

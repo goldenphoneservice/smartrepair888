@@ -1,0 +1,40 @@
+GPS-SMART MANAGEMENT — PAKET UJI FITUR SERVIS & INVENTORI
+
+Perubahan UI dalam paket ini:
+- Form servis memisahkan merek, model, dan IMEI.
+- Nomor tiket dan kode tracking dibuat otomatis jika kolomnya dikosongkan.
+- Garansi memiliki durasi, jenis, syarat, tanggal mulai dan akhir; tanggal garansi diisi saat status berubah menjadi Selesai.
+- Kolom catatan sparepart, sumber sparepart, dan modal sparepart.
+- Menu Inventori menjadi menu input produk dengan SKU otomatis/manual, kategori, merek, model kompatibel, stok minimum, modal, harga jual, pemasok.
+- Migration indeks pencarian servis dan SKU yang tidak menghapus data.
+
+BATASAN PENTING UNTUK UJI:
+- Paket ini belum menerapkan pengurangan stok otomatis/atomik saat sparepart dipakai. Jangan menganggap stok servis sudah terintegrasi atau menggunakannya untuk pembukuan stok produksi.
+- Pemilih sparepart langsung dari inventori belum terhubung; kolom penggunaan sparepart saat ini adalah pencatatan teks.
+- Pola PIN/kunci layar tidak disimpan oleh paket ini. Tabel app_records menyimpan JSON biasa, sehingga menyimpan pola/PIN di sana akan berisiko membocorkan kredensial perangkat. Fitur tersebut harus memakai penyimpanan terenkripsi dengan kunci server-side, akses berbasis peran, dan penghapusan terjadwal sebelum diaktifkan.
+- Nomor tiket otomatis menggunakan hitungan data yang sedang dimuat pada perangkat/workspace; untuk penggunaan multi-kasir bersamaan perlu RPC database atomik agar benar-benar bebas benturan.
+- Belum diklaim production-ready. Build perlu diverifikasi pada komputer yang memiliki dependensi npm dan konfigurasi Supabase.
+
+PERSIAPAN:
+1. Ekstrak ZIP.
+2. Salin .env.example menjadi .env lalu isi hanya VITE_SUPABASE_URL dan VITE_SUPABASE_PUBLISHABLE_KEY.
+3. Di Supabase SQL Editor, jalankan migration baru 202610220001_service_inventory_workflow_indexes.sql setelah migration app_records sebelumnya diterapkan.
+4. Jalankan MULAI-APLIKASI.bat atau terminal: npm ci lalu npm run dev.
+5. Uji tambah/edit servis dan inventori di workspace percobaan. Jangan gunakan data PIN asli atau data pelanggan nyata selama uji.
+
+JANGAN memasukkan service_role key ke file .env frontend atau membagikan key tersebut.
+
+PEMBARUAN SERVIS (22 Oktober 2026)
+- Harga servis memakai Harga deal, bukan estimasi.
+- Nomor tiket dan kode tracking dibuat ketika formulir servis baru dibuka.
+- Untuk mengirim link status melalui WhatsApp, simpan tiket lalu klik tombol "Kirim link tracking lewat WhatsApp".
+- Agar link tracking publik berfungsi tanpa login, jalankan migration supabase/migrations/202610220002_public_service_tracking.sql setelah migration app_records dasar.
+- Garansi dimulai otomatis ketika status diubah menjadi "Diambil"; akhir garansi dihitung berdasarkan durasi hari.
+- Form servis memiliki area gambar pola kunci layar. Pola ini merupakan data sensitif: batasi akses akun petugas, dapatkan persetujuan pelanggan, dan hapus pola setelah tidak diperlukan.
+
+
+PEMBARUAN FORM SERVIS DAN USER
+- Tanggal input servis sekarang berada di atas nomor tiket dan bisa dipilih melalui kalender.
+- Produk yang sudah disimpan di menu Inventori akan muncul sebagai pilihan sparepart di form Servis HP. Pilih produk dari dropdown; untuk barang luar stok gunakan kolom manual.
+- Menu Tim & Akses kini mengirim undangan pengguna melalui Edge Function team-invite. Undangan hanya bisa dibuat oleh owner/manager workspace. Pengguna baru harus membuka email undangan untuk mengatur akses.
+- Edge Function team-invite telah dipasang pada proyek Supabase GPS-SMART-MANAGEMENT. Jangan menaruh service_role key di file .env frontend.

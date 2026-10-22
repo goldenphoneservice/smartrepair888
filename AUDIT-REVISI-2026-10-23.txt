@@ -1,0 +1,21 @@
+GPS-SMART MANAGEMENT — AUDIT LANJUTAN & STABILISASI
+Tanggal: 23 Oktober 2026
+Basis: GPS-SMART-MANAGEMENT-AUDIT-STABILISASI-UJI.zip
+
+Perbaikan lanjutan pada source:
+1. Normalisasi nomor WhatsApp ke format internasional Indonesia (+62 dalam bentuk angka) pada alur link tracking dari form servis, daftar servis, dan asisten. Nomor yang dimulai 08 atau 8 kini dipetakan ke 628..., sedangkan nomor yang sudah berformat internasional tidak ditambah prefix lagi.
+2. Perhitungan tanggal garansi dan fallback tanggal inventori menggunakan tanggal kalender lokal perangkat, bukan memotong tanggal UTC. Ini menghindari tanggal bergeser pada jam-jam tertentu di Indonesia.
+3. Tambah pemeriksaan nomor telepon pelanggan duplikat pada alur Pelanggan Baru dari form servis. Jika nomor yang sama sudah ada pada workspace yang sedang dimuat, aplikasi menyarankan memilih pelanggan yang sudah tersimpan agar riwayat tidak terpecah. Pemeriksaan sisi klien ini bukan pengganti constraint database dan tidak menghilangkan race condition.
+4. Label ringkasan Dashboard diperjelas menjadi total/akumulasi catatan, karena angka penjualan dan pengeluaran yang ditampilkan adalah akumulasi semua catatan, bukan hanya hari ini.
+
+Pengujian yang dilakukan:
+- TypeScript build check: LULUS dengan `node node_modules/typescript/lib/tsc.js -b` memakai dependency yang tersedia dari arsip lokal.
+- Build produksi Vite: GAGAL pada lingkungan pemeriksaan karena dependency opsional native `@rollup/rollup-linux-x64-gnu` tidak tersedia. Tidak mengklaim build produksi lulus.
+- Pemeriksaan perubahan source dan struktur ZIP: dilakukan setelah paket dibuat.
+- Login live, browser E2E, transaksi tulis-baca Supabase, serta pengiriman WhatsApp: BELUM diuji.
+
+Batasan penting:
+- Stok dan jurnal pergerakan stok masih diproses sebagai beberapa permintaan client-side; ini belum atomic dan tetap perlu RPC/transaksi database untuk ketahanan terhadap operasi bersamaan atau kegagalan di tengah proses.
+- Pemeriksaan duplikasi SKU/barcode/telepon di frontend tidak menjamin keunikan jika dua pengguna menyimpan secara bersamaan. Constraint database/RPC adalah penguatan lanjutan.
+- Tidak ada SQL yang dijalankan ke Supabase live dalam paket ini.
+- `.env` hanya boleh berisi VITE_SUPABASE_URL, VITE_SUPABASE_PUBLISHABLE_KEY, dan konfigurasi publik. Jangan pernah memasukkan SUPABASE_SERVICE_ROLE_KEY atau rahasia provider AI ke frontend.

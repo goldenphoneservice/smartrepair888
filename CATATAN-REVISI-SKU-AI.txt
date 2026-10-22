@@ -1,0 +1,5 @@
+REVISI
+- Tombol pembuat SKU dipindahkan ke dalam kolom, sisi kanan.
+- Ditambahkan ringkasan inventori berbasis aturan.
+- AI generatif belum diaktifkan; lihat PETUNJUK-ANALISIS-PINTAR-AI.txt untuk rancangan aman.
+- Build lokal dicoba tetapi gagal karena paket type definition/dependensi di lingkungan pemeriksaan tidak lengkap. Tidak ada klaim build lolos.

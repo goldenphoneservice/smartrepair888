@@ -1,0 +1,10 @@
+GPS-SMART-MANAGEMENT — Pelanggan Baru dari Form Servis
+
+1. Login dan pilih workspace toko.
+2. Buka menu Servis HP, lalu buka formulir tiket servis.
+3. Pada bagian Pilih pelanggan, pilih pelanggan yang sudah ada atau klik + Pelanggan Baru.
+4. Isi nama dan nomor WhatsApp; alamat opsional. Klik Simpan & pilih pelanggan.
+5. Nama dan nomor akan terisi otomatis pada formulir servis. Simpan tiket servis seperti biasa.
+6. Pelanggan yang tersimpan juga tersedia di menu Pelanggan dan dapat dipilih untuk servis berikutnya.
+
+Catatan: fitur menggunakan tabel app_records dan module_key Pelanggan yang sudah digunakan aplikasi.

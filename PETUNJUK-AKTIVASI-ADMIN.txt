@@ -1,0 +1,22 @@
+GPS-SMART MANAGEMENT — ADMIN PLATFORM & AKTIVASI
+
+Yang disiapkan dalam paket ini:
+- SKU inventori otomatis SKU-000001 saat kolom SKU dikosongkan, atau SKU manual. Aplikasi memeriksa duplikat pada data yang dimuat; migrasi menambah unique index di database.
+- Supabase Edge Function `platform-admin` dengan pemeriksaan akun pada public.platform_owners.
+- Aksi owner-check, list-tenants, activate, create-code, dan redeem.
+- Kode aktivasi disimpan sebagai SHA-256 hash; kode mentah hanya ditampilkan sekali. Penukaran menggunakan conditional update untuk mencegah pemakaian ganda.
+
+PENTING: fitur aktivasi belum live sampai fungsi Edge dideploy dan secret server dikonfigurasi.
+
+LANGKAH PEMASANGAN:
+1. Supabase Dashboard > SQL Editor, pastikan proyek GPS-SMART-MANAGEMENT dengan ref ljngcaylpmdcjhombntl.
+2. Jalankan isi file supabase/migrations/202610190003_platform_activation.sql.
+3. Deploy folder supabase/functions/platform-admin sebagai Edge Function bernama platform-admin.
+4. Di Edge Function secrets, pastikan SUPABASE_URL dan SUPABASE_SERVICE_ROLE_KEY dikonfigurasi sebagai server secrets. Jangan pernah memasukkan service role key ke .env frontend atau membagikannya.
+5. Function menggunakan `tenants`, `memberships`, `platform_owners`, `platform_activation_codes`, dan `platform_subscriptions`. Pastikan schema memberships memiliki tenant_id, user_id, is_active, dan tenants memiliki id, name, slug, created_at.
+6. Test endpoint dengan akun pemilik; aksi owner-check harus mengembalikan isOwner true. Akun lain harus menerima 403 untuk aksi selain redeem.
+
+Catatan:
+- Tabel platform_subscriptions menyimpan status aktivasi platform; integrasi dengan pemeriksaan akses/limit produk masih perlu dihubungkan ke logika billing aplikasi sebelum dipakai untuk memblokir fitur.
+- Edge Function belum dideploy otomatis ke Supabase dari paket ini.
+- Jangan menggunakan fungsi ini sebelum migration dan function deployment berhasil.
