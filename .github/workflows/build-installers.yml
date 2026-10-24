@@ -1,0 +1,91 @@
+name: Build GPS-SMART installers
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "src-tauri/**"
+      - "src/**"
+      - "package.json"
+      - "package-lock.json"
+      - "vite.config.ts"
+      - ".github/workflows/build-installers.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  windows-installer:
+    name: Windows setup EXE
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install frontend dependencies
+        run: npm ci
+      - name: Build Windows NSIS installer
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://ljngcaylpmdcjhombntl.supabase.co' }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_JKA1SxiLGjCM4nApK8L9yQ_lCvPiXH_' }}
+        run: npm run tauri:build
+      - name: Upload Windows installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: GPS-SMART-MANAGEMENT-Windows-Setup
+          path: src-tauri/target/release/bundle/nsis/*.exe
+          if-no-files-found: error
+          retention-days: 14
+
+  android-apk:
+    name: Android APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Setup Rust Android targets
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Install Android NDK
+        run: sdkmanager "ndk;27.0.12077973" "platforms;android-35" "build-tools;35.0.0"
+      - name: Configure Android environment
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
+          echo "NDK_HOME=$ANDROID_HOME/ndk/27.0.12077973" >> "$GITHUB_ENV"
+      - name: Install frontend dependencies
+        run: npm ci
+      - name: Initialize Tauri Android project
+        run: npm run tauri -- android init
+      - name: Build Android APK
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://ljngcaylpmdcjhombntl.supabase.co' }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_JKA1SxiLGjCM4nApK8L9yQ_lCvPiXH_' }}
+        run: npm run tauri -- android build --apk
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: GPS-SMART-MANAGEMENT-Android-APK
+          path: src-tauri/gen/android/app/build/outputs/apk/**/*.apk
+          if-no-files-found: error
+          retention-days: 14
