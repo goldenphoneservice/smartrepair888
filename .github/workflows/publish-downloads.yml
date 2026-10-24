@@ -1,0 +1,153 @@
+name: Publish GPS-SMART direct downloads
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/publish-downloads.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gps-smart-public-release-v0.1.0
+  cancel-in-progress: false
+
+jobs:
+  windows-installer:
+    name: Build Windows installer
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install frontend dependencies
+        run: npm ci
+      - name: Build Windows NSIS installer
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://ljngcaylpmdcjhombntl.supabase.co' }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_JKA1SxiLGjCM4nApK8L9yQ_lCvPiXH_' }}
+        run: npm run tauri:build
+      - name: Stage installer
+        shell: pwsh
+        run: |
+          $file = Get-ChildItem src-tauri/target/release/bundle/nsis/*.exe | Select-Object -First 1
+          if (-not $file) { throw "Windows installer was not produced" }
+          New-Item -ItemType Directory -Force release-assets | Out-Null
+          Copy-Item $file.FullName "release-assets/GPS-SMART-MANAGEMENT-Windows-Setup.exe"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-release-asset
+          path: release-assets/GPS-SMART-MANAGEMENT-Windows-Setup.exe
+          if-no-files-found: error
+          retention-days: 3
+
+  android-apk:
+    name: Build and sign Android APK when signing credentials are configured
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+      - uses: android-actions/setup-android@v4
+        with:
+          packages: ''
+      - name: Install Android SDK packages
+        run: sdkmanager "ndk;27.0.12077973" "platforms;android-35" "build-tools;35.0.0"
+      - name: Configure Android environment
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
+          echo "NDK_HOME=$ANDROID_HOME/ndk/27.0.12077973" >> "$GITHUB_ENV"
+      - name: Install frontend dependencies
+        run: npm ci
+      - name: Initialize Tauri Android project
+        run: npm run tauri -- android init
+      - name: Build Android APK
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://ljngcaylpmdcjhombntl.supabase.co' }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_JKA1SxiLGjCM4nApK8L9yQ_lCvPiXH_' }}
+        run: npm run tauri -- android build --apk
+      - name: Check release signing configuration
+        id: signing
+        shell: bash
+        env:
+          KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          if [[ -n "$KEYSTORE" && -n "$STORE_PASSWORD" && -n "$KEY_ALIAS" && -n "$KEY_PASSWORD" ]]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "Android APK will not be published: release signing secrets are not configured."
+          fi
+      - name: Sign APK for public distribution
+        if: steps.signing.outputs.configured == 'true'
+        shell: bash
+        env:
+          KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          echo "$KEYSTORE" | base64 --decode > "$RUNNER_TEMP/release-key.jks"
+          APK="$(find src-tauri/gen/android/app/build/outputs/apk -type f -name '*.apk' | head -n 1)"
+          test -n "$APK"
+          BUILD_TOOLS="$ANDROID_HOME/build-tools/35.0.0"
+          "$BUILD_TOOLS/zipalign" -f -p 4 "$APK" release-unsigned-aligned.apk
+          "$BUILD_TOOLS/apksigner" sign --ks "$RUNNER_TEMP/release-key.jks" --ks-key-alias "$KEY_ALIAS" --ks-pass "pass:$STORE_PASSWORD" --key-pass "pass:$KEY_PASSWORD" --out release-assets-GPS-SMART-MANAGEMENT-Android.apk release-unsigned-aligned.apk
+          "$BUILD_TOOLS/apksigner" verify --verbose release-assets-GPS-SMART-MANAGEMENT-Android.apk
+          mkdir -p release-assets
+          mv release-assets-GPS-SMART-MANAGEMENT-Android.apk release-assets/GPS-SMART-MANAGEMENT-Android.apk
+          rm -f "$RUNNER_TEMP/release-key.jks" release-unsigned-aligned.apk
+      - uses: actions/upload-artifact@v4
+        if: steps.signing.outputs.configured == 'true'
+        with:
+          name: android-release-asset
+          path: release-assets/GPS-SMART-MANAGEMENT-Android.apk
+          if-no-files-found: error
+          retention-days: 3
+      - name: Report Android signing requirement
+        if: steps.signing.outputs.configured != 'true'
+        run: echo "Android download remains unpublished until a stable release signing keystore is configured in repository Actions secrets."
+
+  publish-release:
+    name: Publish stable direct-download URLs
+    needs: [windows-installer, android-apk]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-release-asset
+          path: release-assets
+      - uses: actions/download-artifact@v4
+        if: needs.android-apk.result == 'success'
+        continue-on-error: true
+        with:
+          name: android-release-asset
+          path: release-assets
+      - name: Create stable release v0.1.0
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if gh release view v0.1.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release v0.1.0 already exists; refusing to overwrite published assets."
+            exit 1
+          fi
+          gh release create v0.1.0 release-assets/*             --repo "$GITHUB_REPOSITORY"             --title "GPS-SMART MANAGEMENT v0.1.0"             --notes "Initial public downloads for GPS-SMART MANAGEMENT. Windows installer is included. Android APK is included only when signed with the configured release keystore."
