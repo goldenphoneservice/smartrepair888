@@ -1,0 +1,46 @@
+name: Auto-update foundation checks
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "src-tauri/**"
+      - "package.json"
+      - "package-lock.json"
+      - "vite.config.ts"
+      - ".github/workflows/**"
+      - "docs/AUTO_UPDATE.md"
+  push:
+    branches: ["feat/auto-update-foundation"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  frontend-and-config:
+    name: Frontend build and Tauri config validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Build website frontend
+        run: npm run build
+      - name: Validate Tauri configuration JSON
+        run: node -e "JSON.parse(require('fs').readFileSync('src-tauri/tauri.conf.json', 'utf8')); console.log('Tauri config JSON is valid')"
+      - name: Confirm updater remains disabled until signing key is provisioned
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const config = JSON.parse(fs.readFileSync('src-tauri/tauri.conf.json', 'utf8'));
+          if (config.bundle?.createUpdaterArtifacts !== false) {
+            throw new Error('Review updater signing configuration before changing artifact generation');
+          }
+          console.log('Safe gate passed: updater artifacts remain disabled until signed updater configuration is reviewed.');
+          NODE
