@@ -12,6 +12,7 @@ on:
       - "vite.config.ts"
       - ".github/workflows/**"
       - "docs/AUTO_UPDATE.md"
+      - "docs/RELEASE_CHECKLIST.md"
   push:
     branches: ["feat/auto-update-foundation"]
   workflow_dispatch:
@@ -33,11 +34,14 @@ jobs:
         run: npm ci
       - name: Build website frontend
         run: npm run build
-      - name: Verify public download page and official release links
+      - name: Verify built download page and official release links
         run: |
           test -s public/download/index.html
+          test -s dist/download/index.html
           grep -q 'GPS-SMART-MANAGEMENT-Windows-Setup.exe' public/download/index.html
           grep -q 'GPS-SMART-MANAGEMENT-Android.apk' public/download/index.html
+          grep -q 'GPS-SMART-MANAGEMENT-Windows-Setup.exe' dist/download/index.html
+          grep -q 'GPS-SMART-MANAGEMENT-Android.apk' dist/download/index.html
       - name: Validate Tauri configuration JSON
         run: node -e "JSON.parse(require('fs').readFileSync('src-tauri/tauri.conf.json', 'utf8')); console.log('Tauri config JSON is valid')"
       - name: Confirm updater remains disabled until signing key is provisioned
