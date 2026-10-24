@@ -56,3 +56,15 @@ html[data-theme="dark"]{color-scheme:dark;background:#0b1120;color:#e5eaf4}html[
 .assistant-user-query{padding:10px 12px;border-radius:10px;background:var(--panel-muted,rgba(128,128,128,.08));border-left:3px solid var(--accent-color,#64748b);overflow-wrap:anywhere}
 .voice-answer p[aria-live="polite"]{overflow-wrap:anywhere}
 .voice-command-row button{white-space:nowrap}
+
+/* Login form polish: visible password control and safe email-only preference */
+.auth-hero .auth-hero-subtitle{color:#e2e8f7;font-size:18px;font-weight:700;line-height:1.45;margin:0 0 12px;max-width:440px}
+.auth-hero h1{font-size:clamp(38px,4.4vw,62px);overflow-wrap:anywhere}
+.password-field{position:relative;display:flex;align-items:center;margin-bottom:18px}
+.password-field input{padding-right:76px!important;margin-bottom:0!important}
+.password-toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:#5268c7;font-size:12px;font-weight:700;padding:8px;border-radius:7px}
+.password-toggle:hover{background:#eef1ff}
+.auth-card .remember-email{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 18px;font-weight:600;color:#44516a}
+.auth-card .remember-email input{width:15px;height:15px;margin:0;accent-color:#5b7cff}
+.auth-card .remember-email span{width:100%;padding-left:23px;font-size:10px;font-weight:400;color:#8792a4;margin-top:-3px}
+@media(max-width:900px){.auth-screen{grid-template-columns:1fr}.auth-left{min-height:auto;padding:26px 7% 16px}.auth-hero{padding:36px 0 28px;margin:0}.auth-hero h1{font-size:clamp(34px,8vw,52px);margin:20px 0 14px}.hero-stats{gap:24px;margin-top:26px}.auth-footer{display:none}.auth-right{padding:28px 7% 42px}.mobile-brand{display:flex;margin-bottom:30px}}
