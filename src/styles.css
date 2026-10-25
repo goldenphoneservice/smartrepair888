@@ -437,3 +437,11 @@ html[data-theme="c"] .redesigned-stats .stat-card { box-shadow:0 9px 25px #5c56b
  .redesigned-stats .stat-card > strong { font-size:20px; }
  .overview-label h2 { font-size:18px; }
 }
+
+
+/* Final usability polish: keyboard focus, reduced motion, and narrow-screen resilience */
+:where(button,a,input,select,textarea,[tabindex]):focus-visible{outline:3px solid #6b83ff;outline-offset:3px}
+button:focus:not(:focus-visible){outline:none}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+@media(max-width:760px){.sidebar.open{z-index:20}.sidebar.open .close-sidebar{display:grid}.dashboard-redesign,.dashboard-grid,.performance-panel,.module-toolbar{min-width:0}.performance-chart,.chart-container{max-width:100%;overflow-x:auto}.voice-command-row{flex-wrap:wrap}.voice-command-row input{min-width:0;width:100%;flex-basis:100%}.heading-actions{flex-wrap:wrap}.date-chip{white-space:nowrap}}
+@media(max-width:420px){.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stat-card{overflow-wrap:anywhere}.panel-heading{gap:8px}.panel-heading h2{line-height:1.45}.voice-suggestions{display:flex;flex-wrap:wrap;gap:6px}}
