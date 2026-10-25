@@ -44,6 +44,11 @@ Last reviewed: 2026-10-26 (latest preview and access-hardening follow-up)
 
 The first installed version must itself include the updater and final public key. Existing older installations without the updater need a one-time manual upgrade. Tauri requires signatures to verify updates; the private key must remain secret.
 
+### 4. Android APK
+
+- The current Tauri config targets Windows NSIS only; no APK can be claimed as built from this pipeline.
+- Add Android target/toolchain, app identifier/signing configuration, and a separate CI build; test installation and Supabase auth on a real Android device before publishing an APK.
+
 ## Launch checklist
 
 - [ ] Confirm product scope and supported platform (initially Windows desktop; web preview is not the native updater).
@@ -61,6 +66,6 @@ The first installed version must itself include the updater and final public key
 
 ## Useful links
 
-- Latest preview deployment: https://smartrepair888-4dw3gcnlz-junliu228-6860.vercel.app/
+- Latest preview deployment (READY, latest branch commit): https://smartrepair888-kamnmv992-junliu228-6860.vercel.app/
 - Pull request: https://github.com/goldenphoneservice/smartrepair888/pull/3
 - Updater setup: https://github.com/goldenphoneservice/smartrepair888/blob/feat/login-remember-show-password/docs/AUTO_UPDATE_SETUP.md
