@@ -1,6 +1,6 @@
 [package]
 name = "gps-smart-management"
-version = "0.1.0"
+version = "0.1.1"
 description = "GPS-SMART MANAGEMENT desktop application"
 authors = ["GPS-SMART MANAGEMENT"]
 edition = "2021"
