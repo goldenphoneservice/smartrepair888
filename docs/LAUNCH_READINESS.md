@@ -4,28 +4,29 @@ Last reviewed: 2026-10-26
 
 ## Current status
 
-**Not ready for a public production launch yet.** The current branch is suitable for preview and controlled internal testing only until the release gates below pass.
+**Not ready for a broad public production launch yet.** The current branch is suitable for preview and controlled internal testing until the release gates below pass.
 
 - The login UX branch includes show/hide password and opt-in email remembering. Passwords are never written to local storage by that feature.
-- The latest frontend preview deployment for commit `63590534e9bff95806383b8429cbd0fedf69566e` reached Vercel `READY`.
-- The Supabase project `GPS-SMART-MANAGEMENT` is active and healthy. All 25 public tables currently have RLS enabled.
-- The public service-tracking RPC was hardened on 2026-10-26: its `search_path` is now empty/pinned, and it returns only the intended public tracking fields. This RPC remains executable by anonymous visitors intentionally so customers can open tracking links; tracking codes must remain high-entropy and must not reveal customer credentials or internal notes.
-- Windows automatic updates are **scaffolded, not release-ready**. A matching Tauri signing key pair and a signed installer smoke test are still required.
+- Latest frontend preview for the launch-readiness documentation commit reached Vercel `READY`; the latest branch deployment is linked below.
+- The Supabase project `GPS-SMART-MANAGEMENT` is active and healthy. All 25 public tables have RLS enabled.
+- The public service-tracking RPC was hardened on 2026-10-26: its `search_path` is pinned/empty, and it returns only intended public tracking fields. Anonymous execution is intentional for customer tracking links; tracking codes must remain high-entropy and must not reveal credentials or internal notes.
+- On 2026-10-26, database DELETE permissions for `app_records` were restricted to active workspace owners and managers. Active technicians/cashiers no longer have permission to delete operational records. Read/insert/update policies still need a full per-role review.
+- Windows automatic updates are **scaffolded, not release-ready**. A matching Tauri signing key pair and signed installer smoke test are still required.
 - Android has no equivalent release/update process in this workflow.
 
 ## Release blockers
 
 ### 1. Security and access control
 
-- Supabase Security Advisor currently reports leaked-password protection disabled. Enable the relevant Auth password protection in the Supabase Dashboard, then re-run Security Advisor.
-- Security Advisor reports RLS-enabled admin tables with no direct policies. These tables are intended to be accessed through the authenticated `platform-admin` Edge Function; verify this is the only supported access path and keep direct client grants restricted.
-- The `app_records` policies currently permit any active tenant member to select, insert, update, and delete records in their tenant. The UI has role labels, but the database policy set does not enforce a per-role permission matrix. Decide and implement least-privilege permissions before onboarding staff accounts.
+- Supabase Security Advisor reports leaked-password protection disabled. Enable the relevant Auth password protection in the Supabase Dashboard if supported by the project plan, then re-run Security Advisor. Supabase documents leaked-password protection as available on Pro and above.
+- Security Advisor reports RLS-enabled admin tables with no direct policies. These tables are intended to be accessed through the authenticated `platform-admin` Edge Function; direct client grants to those tables are absent. Keep that boundary and verify the function is the only supported access path.
+- `app_records` DELETE is now restricted to active owners/managers. However, SELECT, INSERT, and UPDATE still apply to all active tenant members. Implement and test the intended per-role permission matrix before inviting staff users; the UI alone is not a security boundary.
 - Run automated cross-tenant isolation tests with at least two independent tenant users. Verify tenant A cannot read, modify, or delete tenant B's records, and that a non-member cannot invoke protected actions.
 - Review handling and retention of sensitive repair data, including device PIN/pattern notes. Collect it only with customer permission, restrict access, and remove it when no longer required.
 
 ### 2. Business workflow and financial correctness
 
-- The current UI uses the generic `app_records` store for multiple operational modules. Do not represent the current accounting and payment experience as a fully audited accounting system until workflows are reconciled against the normalized tables and journal invariants.
+- The current UI uses the generic `app_records` store for multiple operational modules. Do not represent the current accounting/payment experience as a fully audited accounting system until workflows are reconciled against normalized tables and journal invariants.
 - Test complete flows using test data: create customer, open repair ticket, update repair status, consume/return parts, complete sale, receive purchase, record expense, and reconcile totals.
 - Verify all stock movements and sale/payment operations are atomic under concurrent use, and verify failed operations leave no partial records.
 - Test backup/restore and data export before live customer data is entered.
@@ -41,12 +42,12 @@ Last reviewed: 2026-10-26
 6. Publish a later signed test version and verify that the installed app detects, downloads, verifies, and installs the update. Test cancellation and offline/update-server failure behavior.
 7. Only after that smoke test passes, publish a stable release tag. Do not tag a public release merely to test the workflow.
 
-The first installed version must itself include the updater and the final public key. Existing older installations without the updater need a one-time manual upgrade.
+The first installed version must itself include the updater and final public key. Existing older installations without the updater need a one-time manual upgrade. Tauri requires signatures to verify updates; the private key must remain secret.
 
 ## Launch checklist
 
 - [ ] Confirm product scope and supported platform (initially Windows desktop; web preview is not the native updater).
-- [ ] Enable leaked-password protection and review all Security Advisor warnings.
+- [ ] Enable leaked-password protection where available and review all Security Advisor warnings.
 - [ ] Implement and test role-based permissions for owner, manager, cashier, and technician.
 - [ ] Pass cross-tenant isolation tests.
 - [ ] Pass operational, inventory, sales, purchase, expense, and accounting reconciliation tests.
@@ -60,7 +61,6 @@ The first installed version must itself include the updater and the final public
 
 ## Useful links
 
-- Preview deployment: https://smartrepair888-nbhanf5up-junliu228-6860.vercel.app/
+- Latest preview deployment: https://smartrepair888-rcpwfo3tj-junliu228-6860.vercel.app/
 - Pull request: https://github.com/goldenphoneservice/smartrepair888/pull/3
 - Updater setup: https://github.com/goldenphoneservice/smartrepair888/blob/feat/login-remember-show-password/docs/AUTO_UPDATE_SETUP.md
-
