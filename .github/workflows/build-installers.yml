@@ -28,7 +28,7 @@ jobs:
           cache: npm
       - uses: dtolnay/rust-toolchain@stable
       - name: Install frontend dependencies
-        run: npm ci
+        run: npm install
       - name: Build Windows NSIS installer
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://ljngcaylpmdcjhombntl.supabase.co' }}
@@ -67,7 +67,7 @@ jobs:
           echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
           echo "NDK_HOME=$ANDROID_HOME/ndk/27.0.12077973" >> "$GITHUB_ENV"
       - name: Install frontend dependencies
-        run: npm ci
+        run: npm install
       - name: Initialize Tauri Android project
         run: npm run tauri -- android init
       - name: Build Android APK
