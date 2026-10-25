@@ -1,0 +1,61 @@
+name: Release GPS-SMART MANAGEMENT
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  windows-release:
+    name: Build and publish signed Windows update
+    runs-on: windows-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Validate updater signing configuration
+        shell: pwsh
+        env:
+          TAURI_UPDATER_PUBLIC_KEY: ${{ vars.TAURI_UPDATER_PUBLIC_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:TAURI_UPDATER_PUBLIC_KEY)) {
+            throw "Missing repository variable TAURI_UPDATER_PUBLIC_KEY. Configure the Tauri updater public key before publishing a release."
+          }
+          if ([string]::IsNullOrWhiteSpace($env:TAURI_SIGNING_PRIVATE_KEY)) {
+            throw "Missing repository secret TAURI_SIGNING_PRIVATE_KEY. Configure the matching private signing key before publishing a release."
+          }
+      - name: Install frontend dependencies
+        run: npm install
+      - name: Apply updater public key to release configuration
+        shell: pwsh
+        env:
+          TAURI_UPDATER_PUBLIC_KEY: ${{ vars.TAURI_UPDATER_PUBLIC_KEY }}
+        run: |
+          $config = Get-Content "src-tauri/tauri.conf.json" -Raw | ConvertFrom-Json
+          $config.plugins.updater.pubkey = $env:TAURI_UPDATER_PUBLIC_KEY
+          $config | ConvertTo-Json -Depth 100 | Set-Content "src-tauri/tauri.conf.json"
+      - name: Build and publish GitHub release with updater manifest
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: "GPS-SMART MANAGEMENT ${{ github.ref_name }}"
+          releaseBody: |
+            GPS-SMART MANAGEMENT Windows release.
+            Updates are signed and distributed through the built-in updater.
+          releaseDraft: false
+          prerelease: false
+          includeUpdaterJson: true
+          args: "--bundles nsis"
