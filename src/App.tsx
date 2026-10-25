@@ -53,6 +53,8 @@ const localDateString=(date=new Date())=>`${date.getFullYear()}-${String(date.ge
 const toWhatsAppPhone=(value:unknown)=>{const digits=String(value??'').replace(/\D/g,'');if(!digits)return '';if(digits.startsWith('0'))return `62${digits.slice(1)}`;if(digits.startsWith('8'))return `62${digits}`;return digits;};
 function AuthScreen(){
  const [mode,setMode]=useState<'login'|'signup'>('login');
+ const [authDark,setAuthDark]=useState(()=>{try{return localStorage.getItem('gps-smart:theme')==='dark'}catch{return false}});
+ useEffect(()=>{document.documentElement.dataset.theme=authDark?'dark':'light';try{localStorage.setItem('gps-smart:theme',authDark?'dark':'light')}catch{/* Theme still works for this session. */}},[authDark]);
  const [rememberAccount,setRememberAccount]=useState(()=>{try{return localStorage.getItem('gps-smart:remember-account')==='true'}catch{return false}});
  const [email,setEmail]=useState(()=>{try{return localStorage.getItem('gps-smart:remember-account')==='true'?(localStorage.getItem('gps-smart:remembered-email')||''):''}catch{return ''}});
  const [password,setPassword]=useState('');
@@ -90,7 +92,7 @@ function AuthScreen(){
    </div>
    <div className="auth-footer">GPS-SMART MANAGEMENT <span>•</span> WORKSPACE EDITION</div>
   </div>
-  <div className="auth-right"><div className="auth-card">
+  <div className="auth-right"><button className="auth-theme-toggle" type="button" onClick={()=>setAuthDark(v=>!v)} aria-label={authDark?"Aktifkan mode terang":"Aktifkan mode gelap"} title={authDark?"Mode terang":"Mode gelap"}>{authDark?<Sun size={17}/>:<Moon size={17}/>}<span>{authDark?"Mode terang":"Mode gelap"}</span></button><div className="auth-card">
    <div className="mobile-brand"><div className="brand-mark"><Smartphone size={21}/></div><b>GPS-SMART MANAGEMENT</b></div>
    <div className="eyebrow muted">SELAMAT DATANG</div>
    <h2>{mode==='login'?'Masuk ke akun Anda':'Buat akun baru'}</h2>
