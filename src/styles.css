@@ -174,3 +174,27 @@ html[data-theme="c"] .primary-button{background:linear-gradient(110deg,#245fe8,#
 .theme-apply-button{margin-top:14px}
 html[data-theme="b"] .theme-choice,html[data-theme="b"] .theme-picker-section{background:#111a2b;color:#e5eaf4;border-color:#26344d}
 @media(max-width:760px){.theme-choice-grid{grid-template-columns:1fr}.theme-choice{display:grid;grid-template-columns:90px 1fr;align-items:center;column-gap:12px}.theme-preview{grid-row:span 3;height:68px}.theme-choice small,.theme-choice-check{grid-column:2}.theme-picker-heading{align-items:flex-start;flex-direction:column}}
+
+/* Strong, visible contrast between selectable presets */
+html[data-theme="a"] body{background:#f6f8fc;color:#172338}
+html[data-theme="a"] .app-shell{background:#f6f8fc!important;color:#172338!important}
+html[data-theme="a"] .sidebar,html[data-theme="a"] .topbar{background:#fff!important;color:#172338!important;border-color:#e5eaf2!important}
+html[data-theme="a"] .panel,html[data-theme="a"] .stat-card,html[data-theme="a"] .settings-panel,html[data-theme="a"] .records-panel,html[data-theme="a"] .data-form-panel,html[data-theme="a"] .setup-card{background:#fff!important;color:#172338!important;border-color:#e3e9f3!important;box-shadow:0 8px 24px rgba(25,48,85,.055)!important}
+html[data-theme="a"] .page-heading h1,html[data-theme="a"] .panel h2,html[data-theme="a"] .stat-card strong{color:#172338!important}
+html[data-theme="b"] body{background:#080e1a!important;color:#e8eef9!important}
+html[data-theme="b"] .app-shell{background:#080e1a!important;color:#e8eef9!important}
+html[data-theme="b"] .sidebar,html[data-theme="b"] .topbar{background:#0e1728!important;color:#e8eef9!important;border-color:#26354d!important}
+html[data-theme="b"] .panel,html[data-theme="b"] .stat-card,html[data-theme="b"] .settings-panel,html[data-theme="b"] .records-panel,html[data-theme="b"] .data-form-panel,html[data-theme="b"] .setup-card{background:#121e32!important;color:#e8eef9!important;border:1px solid #2b3d59!important;box-shadow:0 10px 28px rgba(0,0,0,.2)!important}
+html[data-theme="b"] .page-heading h1,html[data-theme="b"] .panel h2,html[data-theme="b"] .stat-card strong,html[data-theme="b"] .panel p,html[data-theme="b"] .panel label{color:#e8eef9!important}
+html[data-theme="b"] .field input,html[data-theme="b"] .field select,html[data-theme="b"] .field textarea,html[data-theme="b"] .search-box,html[data-theme="b"] input{background:#0a1425!important;color:#f0f5ff!important;border-color:#354a69!important}
+html[data-theme="b"] .nav-item{color:#b7c4d9!important} html[data-theme="b"] .nav-item.active{background:#245fe8!important;color:white!important}
+html[data-theme="b"] th{background:#1c2b43!important;color:#dce6f8!important} html[data-theme="b"] td{color:#e1e9f7!important;border-color:#293a54!important}
+html[data-theme="b"] .workspace-switch,html[data-theme="b"] .date-chip,html[data-theme="b"] .help-card{background:#17263d!important;color:#e8eef9!important}
+html[data-theme="c"] body{background:#f0edff!important;color:#241b45!important}
+html[data-theme="c"] .app-shell{background:linear-gradient(135deg,#f2efff 0%,#f8faff 55%,#eaf5ff 100%)!important;color:#241b45!important}
+html[data-theme="c"] .sidebar,html[data-theme="c"] .topbar{background:#fff!important;color:#241b45!important;border-color:#ddd6fe!important}
+html[data-theme="c"] .panel,html[data-theme="c"] .stat-card,html[data-theme="c"] .settings-panel,html[data-theme="c"] .records-panel,html[data-theme="c"] .data-form-panel,html[data-theme="c"] .setup-card{background:rgba(255,255,255,.96)!important;color:#241b45!important;border:1px solid #ddd6fe!important;box-shadow:0 12px 30px rgba(100,75,190,.10)!important}
+html[data-theme="c"] .page-heading h1,html[data-theme="c"] .panel h2,html[data-theme="c"] .stat-card strong{color:#241b45!important}
+html[data-theme="c"] .nav-item.active{background:linear-gradient(110deg,#e9e3ff,#dceaff)!important;color:#6541d8!important}
+html[data-theme="c"] .primary-button{background:linear-gradient(110deg,#7048e8,#3579ec)!important;color:#fff!important}
+html[data-theme="c"] .stat-card{border-top:3px solid #8b5cf6!important}
