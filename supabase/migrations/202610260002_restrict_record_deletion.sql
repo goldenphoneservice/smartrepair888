@@ -14,7 +14,7 @@ USING (
     WHERE m.tenant_id = app_records.tenant_id
       AND m.user_id = (SELECT auth.uid())
       AND m.is_active = true
-      AND lower(m.role) IN ('owner', 'manager')
+      AND lower(m.role::text) IN ('owner', 'manager')
   )
 );
 
