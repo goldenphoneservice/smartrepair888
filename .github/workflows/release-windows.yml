@@ -42,6 +42,7 @@ jobs:
         run: |
           $config = Get-Content "src-tauri/tauri.conf.json" -Raw | ConvertFrom-Json
           $config.plugins.updater.pubkey = $env:TAURI_UPDATER_PUBLIC_KEY
+          $config.bundle.createUpdaterArtifacts = $true
           $config | ConvertTo-Json -Depth 100 | Set-Content "src-tauri/tauri.conf.json"
       - name: Build and publish GitHub release with updater manifest
         uses: tauri-apps/tauri-action@v0
