@@ -56,3 +56,19 @@ html[data-theme="dark"]{color-scheme:dark;background:#0b1120;color:#e5eaf4}html[
 .assistant-user-query{padding:10px 12px;border-radius:10px;background:var(--panel-muted,rgba(128,128,128,.08));border-left:3px solid var(--accent-color,#64748b);overflow-wrap:anywhere}
 .voice-answer p[aria-live="polite"]{overflow-wrap:anywhere}
 .voice-command-row button{white-space:nowrap}
+
+
+.password-label-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.password-label-row label{margin-bottom:8px}
+.password-hint{font-size:10px;color:#9aa5b5;margin-bottom:8px}
+.password-input-wrap{position:relative;margin-bottom:14px}
+.password-input-wrap input{padding-right:118px;margin-bottom:0}
+.password-visibility{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;background:transparent;border-radius:6px;padding:7px;color:#66758e;font-size:10px;font-weight:700}
+.password-visibility:hover{background:#eef2ff;color:#4f6bea}
+.password-visibility:focus-visible,.remember-account input:focus-visible{outline:2px solid #5878f6;outline-offset:2px}
+.remember-account{display:flex;align-items:center;gap:9px;margin:0 0 18px!important;color:#65728a!important;font-size:11px!important;font-weight:500!important;cursor:pointer;align-self:flex-start}
+.remember-account input{appearance:auto;width:15px;height:15px;margin:0;border-radius:4px;accent-color:#5878f6;flex-shrink:0}
+.auth-hero p{max-width:430px;line-height:1.85}
+@media(max-width:400px){.password-input-wrap input{padding-right:104px}.password-visibility{gap:4px;right:5px;font-size:9px}}
+html[data-theme="dark"] .password-visibility{color:#bac6db}
+html[data-theme="dark"] .password-visibility:hover{background:#1a2740;color:#aebeff}
