@@ -198,3 +198,60 @@ html[data-theme="c"] .page-heading h1,html[data-theme="c"] .panel h2,html[data-t
 html[data-theme="c"] .nav-item.active{background:linear-gradient(110deg,#e9e3ff,#dceaff)!important;color:#6541d8!important}
 html[data-theme="c"] .primary-button{background:linear-gradient(110deg,#7048e8,#3579ec)!important;color:#fff!important}
 html[data-theme="c"] .stat-card{border-top:3px solid #8b5cf6!important}
+
+
+/* GPS-SMART layout refresh: change the app composition, not only its palette. */
+@media (min-width: 900px) {
+  .app-shell { background: #f3f5fa; }
+  .sidebar { left: 14px; top: 14px; bottom: 14px; width: 252px; border: 1px solid #e4e8f1; border-radius: 18px; padding: 0 14px; box-shadow: 0 12px 36px #1723380b; }
+  .sidebar-brand { height: 76px; padding: 0 8px; border-bottom-color: #e8ecf4; }
+  .workspace-switch { margin: 15px 0 20px; padding: 12px 10px; border-radius: 12px; }
+  .sidebar nav { padding: 0 1px 12px; }
+  .nav-group { margin-bottom: 18px; }
+  .nav-heading { padding: 0 11px 8px; font-size: 9px; letter-spacing: .16em; }
+  .nav-item { height: 41px; border-radius: 10px; margin: 3px 0; padding: 0 12px; gap: 12px; }
+  .main-area { margin-left: 280px; }
+  .topbar { height: 76px; padding: 0 38px; background: #f8f9fc; border-bottom: 1px solid #e8ecf3; }
+  .content { padding: 34px 38px 24px; }
+  .page-heading { align-items: center; margin-bottom: 28px; }
+  .page-heading h1 { font-size: 30px; letter-spacing: -.055em; margin-top: 8px; }
+  .page-heading p { font-size: 12px; }
+  .date-chip { border-radius: 10px; padding: 11px 14px; background: #fff; box-shadow: 0 3px 10px #1e315007; }
+  .stats-grid { gap: 18px; margin-bottom: 22px; }
+  .stat-card { position: relative; overflow: hidden; border-radius: 15px; padding: 21px 20px 17px; box-shadow: 0 5px 20px #1e315008; transition: transform .18s, box-shadow .18s; }
+  .stat-card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px #1e315012; }
+  .stat-card > strong { font-size: 29px; margin: 17px 0 7px; }
+  .stat-icon { width: 40px; height: 40px; border-radius: 12px; }
+  .stat-line { margin-top: 18px; height: 3px; }
+  .dashboard-grid { gap: 20px; grid-template-columns: minmax(0, 1.45fr) minmax(310px, .85fr); }
+  .panel { border-radius: 15px; box-shadow: 0 5px 20px #1e315008; }
+  .panel-heading { padding: 22px 23px 18px; }
+  .panel-heading h2 { font-size: 14px; }
+  .activity-panel, .quick-panel { min-height: 330px; }
+  .quick-links { padding: 8px 20px; }
+  .quick-link { padding: 14px 2px; }
+  .quick-icon { width: 38px; height: 38px; border-radius: 11px; }
+  .bottom-note { padding: 16px 18px; border-radius: 12px; }
+  .setup-card { border-radius: 15px; padding: 26px; box-shadow: 0 5px 20px #1e315008; }
+  .content-footer { margin-top: 32px; }
+}
+@media (max-width: 899px) {
+  .sidebar { box-shadow: 12px 0 40px #17233822; }
+  .topbar { height: 60px; padding: 0 16px; }
+  .content { padding: 23px 16px 18px; }
+  .page-heading { align-items: flex-start; }
+  .page-heading h1 { font-size: 24px; }
+  .stats-grid { gap: 10px; }
+  .stat-card { border-radius: 12px; padding: 14px 12px 12px; }
+  .stat-card > strong { font-size: 21px; }
+  .dashboard-grid { gap: 13px; }
+}
+html[data-theme="a"] .sidebar { background: #ffffff; }
+html[data-theme="b"] .sidebar { background: #111a2c; border-color: #28354d; }
+html[data-theme="b"] .sidebar-brand, html[data-theme="b"] .sidebar-bottom { border-color: #28354d; }
+html[data-theme="b"] .workspace-switch, html[data-theme="b"] .help-card { background: #19243a; border-color: #2b3852; }
+html[data-theme="b"] .workspace-copy b, html[data-theme="b"] .profile-copy b, html[data-theme="b"] .help-card b { color: #e5ebf7; }
+html[data-theme="b"] .nav-item { color: #a7b4cb; }
+html[data-theme="b"] .nav-item:hover, html[data-theme="b"] .nav-item.active { background: #26375a; color: #cdd7ff; }
+html[data-theme="b"] .nav-heading { color: #71819d; }
+html[data-theme="c"] .sidebar { background: linear-gradient(165deg,#fff 0%,#f4f2ff 100%); }
