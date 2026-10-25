@@ -30,7 +30,7 @@
     "targets": [
       "nsis"
     ],
-    "createUpdaterArtifacts": true,
+    "createUpdaterArtifacts": false,
     "windows": {
       "nsis": {
         "displayLanguageSelector": false,
