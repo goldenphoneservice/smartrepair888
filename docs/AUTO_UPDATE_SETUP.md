@@ -20,6 +20,9 @@ The desktop updater uses Tauri's signed updater protocol and the GitHub Releases
 
 ## Release process
 
+- The workflow is available at `.github/workflows/release-windows.yml`. It runs on a `v*` tag push or manually through GitHub Actions → **Release GPS-SMART MANAGEMENT** → **Run workflow**.
+- For a manual run, select this branch and enter a release tag that exactly matches the version in `package.json`, `src-tauri/Cargo.toml`, and `src-tauri/tauri.conf.json` (currently `v0.1.1` on this branch).
+- The workflow checks that the public/private signing values exist and that all three app versions match before building. A missing or placeholder public key or missing private key stops the release instead of publishing an unusable updater.
 - Test the preview and Windows installer first.
 - Ensure the application version in `package.json`, `src-tauri/Cargo.toml`, and
   `src-tauri/tauri.conf.json` is increased for each release.

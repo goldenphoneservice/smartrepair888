@@ -2,6 +2,16 @@
 
 Windows 10/11 desktop starter using Tauri 2 + React + TypeScript + Vite, online-first with Supabase Cloud. Target backend is **only** project `ljngcaylpmdcjhombntl` (`https://ljngcaylpmdcjhombntl.supabase.co`). This scaffold does not modify the legacy `WAVEID-GSM` project.
 
+
+## Link preview dan unduhan
+
+- **Preview web terbaru (branch redesign):** https://smartrepair888-kamnmv992-junliu228-6860.vercel.app/
+- **Daftar rilis resmi desktop:** https://github.com/goldenphoneservice/smartrepair888/releases/latest
+- **Installer Windows (.exe):** unduh file `.exe` dari rilis resmi di atas setelah tersedia. Jangan gunakan artifact preview sebagai rilis produksi.
+- **Android (.apk):** belum tersedia dari pipeline saat ini. Konfigurasi desktop Tauri hanya menargetkan installer Windows NSIS; APK memerlukan target Android, signing Android, dan build/test terpisah. Jangan menganggap tautan rilis otomatis menyediakan APK.
+
+Catatan: URL preview adalah untuk pengujian, bukan domain produksi. Status installer/APK harus dikonfirmasi dari aset rilis yang benar-benar terunggah.
+
 ## Implemented in this starter
 
 - React desktop shell with sidebar/navigation for Dashboard, Servis HP, Pelanggan, Inventori, Penjualan, Pembelian, Akuntansi, Pengeluaran, Tim & Akses, Langganan, and Pengaturan.

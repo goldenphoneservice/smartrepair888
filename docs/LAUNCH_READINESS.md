@@ -1,6 +1,6 @@
 # GPS-SMART MANAGEMENT — Launch readiness
 
-Last reviewed: 2026-10-26
+Last reviewed: 2026-10-26 (latest preview and access-hardening follow-up)
 
 ## Current status
 
@@ -9,7 +9,7 @@ Last reviewed: 2026-10-26
 - The login UX branch includes show/hide password and opt-in email remembering. Passwords are never written to local storage by that feature.
 - Latest frontend preview for the launch-readiness documentation commit reached Vercel `READY`; the latest branch deployment is linked below.
 - The Supabase project `GPS-SMART-MANAGEMENT` is active and healthy. All 25 public tables have RLS enabled.
-- The public service-tracking RPC was hardened on 2026-10-26: its `search_path` is pinned/empty, and it returns only intended public tracking fields. Anonymous execution is intentional for customer tracking links; tracking codes must remain high-entropy and must not reveal credentials or internal notes.
+- The public service-tracking RPC was hardened on 2026-10-26: its `search_path` is pinned/empty, and it returns only intended public tracking fields. Anonymous execution is intentional for customer tracking links; direct `anon` access to `app_records`, `memberships`, and `tenants` has been revoked, and execution of the tracking RPC has been limited to `anon` (not `authenticated`). Tracking codes must remain high-entropy and must not reveal credentials or internal notes.
 - On 2026-10-26, database DELETE permissions for `app_records` were restricted to active workspace owners and managers. Active technicians/cashiers no longer have permission to delete operational records. Read/insert/update policies still need a full per-role review.
 - Windows automatic updates are **scaffolded, not release-ready**. A matching Tauri signing key pair and signed installer smoke test are still required.
 - Android has no equivalent release/update process in this workflow.
@@ -44,6 +44,11 @@ Last reviewed: 2026-10-26
 
 The first installed version must itself include the updater and final public key. Existing older installations without the updater need a one-time manual upgrade. Tauri requires signatures to verify updates; the private key must remain secret.
 
+### 4. Android APK
+
+- The current Tauri config targets Windows NSIS only; no APK can be claimed as built from this pipeline.
+- Add Android target/toolchain, app identifier/signing configuration, and a separate CI build; test installation and Supabase auth on a real Android device before publishing an APK.
+
 ## Launch checklist
 
 - [ ] Confirm product scope and supported platform (initially Windows desktop; web preview is not the native updater).
@@ -61,6 +66,6 @@ The first installed version must itself include the updater and final public key
 
 ## Useful links
 
-- Latest preview deployment: https://smartrepair888-rcpwfo3tj-junliu228-6860.vercel.app/
+- Latest preview deployment (READY, latest branch commit): https://smartrepair888-kamnmv992-junliu228-6860.vercel.app/
 - Pull request: https://github.com/goldenphoneservice/smartrepair888/pull/3
 - Updater setup: https://github.com/goldenphoneservice/smartrepair888/blob/feat/login-remember-show-password/docs/AUTO_UPDATE_SETUP.md
