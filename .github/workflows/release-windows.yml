@@ -58,7 +58,8 @@ jobs:
           if ($configVersion -ne $packageVersion) {
             throw "Version mismatch: tauri.conf.json=$configVersion, package.json=$packageVersion"
           }
-          if ($cargo -notmatch "(?m)^version = \"$([regex]::Escape($configVersion))\"$") {
+          $cargoVersionMatch = [regex]::Match($cargo, '(?m)^version = "([^"]+)"')
+          if (-not $cargoVersionMatch.Success -or $cargoVersionMatch.Groups[1].Value -ne $configVersion) {
             throw "src-tauri/Cargo.toml version does not match $configVersion"
           }
           if ($env:REQUESTED_TAG -and $env:REQUESTED_TAG -ne "v$configVersion") {
