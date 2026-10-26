@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Versi rilis, contoh v0.1.1 (harus sama dengan versi aplikasi)"
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -19,6 +25,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
       - name: Validate updater signing configuration
@@ -33,8 +40,30 @@ jobs:
           if ([string]::IsNullOrWhiteSpace($env:TAURI_SIGNING_PRIVATE_KEY)) {
             throw "Missing repository secret TAURI_SIGNING_PRIVATE_KEY. Configure the matching private signing key before publishing a release."
           }
+          if ($env:TAURI_UPDATER_PUBLIC_KEY -match "MUST_BE_CONFIGURED|PLACEHOLDER") {
+            throw "TAURI_UPDATER_PUBLIC_KEY is still a placeholder. Use the public key paired with TAURI_SIGNING_PRIVATE_KEY."
+          }
       - name: Install frontend dependencies
-        run: npm install
+        run: npm ci
+      - name: Validate release version
+        shell: pwsh
+        env:
+          REQUESTED_TAG: ${{ inputs.release_tag }}
+        run: |
+          $config = Get-Content "src-tauri/tauri.conf.json" -Raw | ConvertFrom-Json
+          $package = Get-Content "package.json" -Raw | ConvertFrom-Json
+          $cargo = Get-Content "src-tauri/Cargo.toml" -Raw
+          $configVersion = [string]$config.version
+          $packageVersion = [string]$package.version
+          if ($configVersion -ne $packageVersion) {
+            throw "Version mismatch: tauri.conf.json=$configVersion, package.json=$packageVersion"
+          }
+          if ($cargo -notmatch "(?m)^version = \"$([regex]::Escape($configVersion))\"$") {
+            throw "src-tauri/Cargo.toml version does not match $configVersion"
+          }
+          if ($env:REQUESTED_TAG -and $env:REQUESTED_TAG -ne "v$configVersion") {
+            throw "Requested tag must be v$configVersion to match the application version."
+          }
       - name: Apply updater public key to release configuration
         shell: pwsh
         env:
@@ -52,8 +81,8 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
           VITE_TAURI_UPDATER_ENABLED: "true"
         with:
-          tagName: ${{ github.ref_name }}
-          releaseName: "GPS-SMART MANAGEMENT ${{ github.ref_name }}"
+          tagName: ${{ inputs.release_tag || github.ref_name }}
+          releaseName: "GPS-SMART MANAGEMENT ${{ inputs.release_tag || github.ref_name }}"
           releaseBody: |
             GPS-SMART MANAGEMENT Windows release.
             Updates are signed and distributed through the built-in updater.
