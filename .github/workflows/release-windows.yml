@@ -37,6 +37,8 @@ jobs:
           if ([string]::IsNullOrWhiteSpace($env:TAURI_UPDATER_PUBLIC_KEY)) { throw "Missing repository variable TAURI_UPDATER_PUBLIC_KEY." }
           if ([string]::IsNullOrWhiteSpace($env:TAURI_SIGNING_PRIVATE_KEY)) { throw "Missing repository secret TAURI_SIGNING_PRIVATE_KEY." }
           if ($env:TAURI_UPDATER_PUBLIC_KEY -match "MUST_BE_CONFIGURED|PLACEHOLDER") { throw "TAURI_UPDATER_PUBLIC_KEY is a placeholder." }
+      - name: Refresh lockfile for updater dependencies
+        run: npm install --package-lock-only
       - name: Install frontend dependencies
         run: npm ci
       - name: Validate release version
